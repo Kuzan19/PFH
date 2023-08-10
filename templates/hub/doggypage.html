@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ doggy.name }} {% endblock %}
+
+{% block content %}
+
+{% include "navigation.html" %}
+<div class="container px-4 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="col mb-5">
+            <div class="card h-100">
+                {% for photo in doggy.photos.all %}
+                    <img class="card-img-top" src="{{ photo.image.url }}" alt="..." width="600" height="200"/>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<h1> Name: {{ doggy.name }} </h1>
+<h3> Age: {{ doggy.age_old }} Months: {{ doggy.months_old }} </h3>
+<h3> Gender: {{ doggy.gender }} </h3>
+<h3> Place of residential: {{ doggy.place }} </h3>
+
+
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Doggy Find Home {% endblock %}
+
+{% block content %}
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Our good boys and girls</h1>
+            <p class="lead fw-normal text-white-50 mb-0">This sugar buns search home, if you can help, contact us.</p>
+        </div>
+    </div>
+</header>
+<!-- Navigation-->
+{% include "navigation.html" %}
+<!-- Form find pet-->
+<div class="form-find-dogs">
+   <form class="transparent">
+        <div class="form-inner">
+            <h3>Dog need help</h3>
+            <div class="form-doggy-name">
+                {{ form.name }}
+            </div>
+            <div class="form-doggy-age">
+                {{ form.age_old }}
+            </div>
+            <div class="form-doggy-months">
+                {{ form.months_old }}
+            </div>
+            <div class="form-doggy-gender">
+                {{ form.gender }}
+            </div>
+            <div class="form-doggy-image">
+                {{ form.image }}
+            </div>
+            <div class="form-doggy-place">
+                {{ form.place }}
+            </div>
+        </div>
+    </form>
+</div>
+
+{% include 'footer.html' %}
+{% endblock %}

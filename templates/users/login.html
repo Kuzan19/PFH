@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+<div class="card mb-3 border-0 nth-shadow">
+    <div class="card-body">
+        <div class="card-title nth-card-title">
+            <h4>Авторизация на сайте</h4>
+        </div>
+        <form method="post" action="{% url 'login_page' %}">
+            {% csrf_token %}
+            <div class="form-error">{{ form.non_field_errors }}</div>
+            {% for f in form %}
+            <p>
+                <label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>
+                {{ f }}
+                <div class="form-error">
+                    {{ f.errors }}
+                </div>
+            </p>
+            {% endfor %}
+            <div class="d-grid gap-2 d-md-block mt-2">
+                <button type="submit" class="btn btn-dark">Авторизоваться</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
