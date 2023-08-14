@@ -1,19 +1,23 @@
 from django.contrib.auth import login
+from django.forms import inlineformset_factory
+from django.http import HttpResponseRedirect
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, TemplateView
 
+from hub.forms import HubDoggyForm, PhotoDoggyForm
+from hub.models import HubDoggyModel, PhotoDoggyModel
 from users.forms import UserRegistrationForms, UserLoginForm, UserUpdateForm, ProfileUpdateForm
 from users.models import Profile
 
 
 class UserDetailView(DetailView):
-    """
-    Представление для просмотра профиля
-    """
+    """Представление для просмотра профиля"""
+
     model = Profile
     context_object_name = 'profile'
     template_name = 'users/userpage.html'
@@ -26,7 +30,7 @@ class UserDetailView(DetailView):
 
 
 class UserUpdateView(UpdateView):
-    """Представление для редактирования профиля"""
+    """Представление для редактирования профиля пользователя"""
 
     model = Profile
     form_class = ProfileUpdateForm
@@ -60,7 +64,27 @@ class UserUpdateView(UpdateView):
         return reverse_lazy('profile_page', args=[self.slug])
 
 
+class AddDoggyView(View):
+    """Представление для создания нового объявления"""
+
+    def get(self, request):
+        form_doggy = HubDoggyForm()
+        form_photo = PhotoDoggyForm()
+        return render(request, 'users/adddoggy.html', context={'form_doggy': form_doggy, 'form_photo': form_photo, })
+
+    def post(self, request):
+        form_doggy = HubDoggyForm(request.POST)
+        if form_doggy.is_valid():
+            form_doggy.save()
+        form_photo = PhotoDoggyForm(request.POST, request.FILES)
+        if form_photo.is_valid():
+            form_photo.save()
+
+        return HttpResponseRedirect('/hub')
+
+
 class RegisterUser(SuccessMessageMixin, CreateView):
+    """Представление для регистрации нового пользователя"""
 
     form_class = UserRegistrationForms
     template_name = 'users/register.html'
@@ -79,6 +103,7 @@ class RegisterUser(SuccessMessageMixin, CreateView):
 
 
 class LoginUser(SuccessMessageMixin, LoginView):
+    """Представление для авторизации пользователя"""
 
     form_class = UserLoginForm
     template_name = 'users/login.html'

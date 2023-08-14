@@ -1,11 +1,11 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, FileExtensionValidator
+from django.core.validators import MaxValueValidator, FileExtensionValidator, MinValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
 
 
 class HubDoggyModel(models.Model):
-    '''Table of doggy in database'''
+    """Таблица объявлений в базе данных"""
 
     GENDER_DOGGY = [
         ('Boy', "Boy"),
@@ -18,6 +18,7 @@ class HubDoggyModel(models.Model):
     gender = models.CharField(max_length=4, choices=GENDER_DOGGY, default="Boy")
     place = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(default='', null=False, db_index=True)
+    price = models.IntegerField(blank=True, null=False, validators=[MinValueValidator(1)], default=0)
 
     def __str__(self):
         return f"{self.name}"

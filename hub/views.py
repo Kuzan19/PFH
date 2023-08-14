@@ -8,7 +8,7 @@ from .models import HubDoggyModel
 
 
 class HomePageView(View):
-    '''view home and general page'''
+    """Домашняя страница/открывашка"""
 
     def get(self, request):
         return render(request, 'hub/basepage.html')
@@ -18,7 +18,7 @@ class HomePageView(View):
 
 
 class SomeDoggyPage(View):
-
+    """Страница определенного объявления"""
     def get(self, request, slug_doggy: str, id_doggy: int):
         doggy = get_object_or_404(HubDoggyModel, slug=slug_doggy, id=id_doggy)
         return render(request, "hub/doggypage.html", context={'doggy': doggy})
@@ -28,11 +28,11 @@ class SomeDoggyPage(View):
 
 
 class HubPageView(ListView):
-    '''view for demonstration all our pets'''
+    """Главная страница с объявлениями"""
 
-    # doggyes = HubDoggyModel.objects.all()
-    # for doggy in doggyes:
-    #     doggy.save()
+    doggyes = HubDoggyModel.objects.all()
+    for doggy in doggyes:
+        doggy.save()
 
     model = HubDoggyModel
     template_name = 'hub/hubpage.html'
