@@ -24,7 +24,7 @@ class HubDoggyModel(models.Model):
         return f"{self.name}"
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(f"{self.name}{self.age_old}{self.months_old}")
         super(HubDoggyModel, self).save(*args, **kwargs)
 
     def get_url(self):
@@ -34,7 +34,7 @@ class HubDoggyModel(models.Model):
 
 class PhotoDoggyModel(models.Model):
     image = models.FileField(upload_to='uploads/DoggyPhoto')
-    doggy = models.ForeignKey(HubDoggyModel, on_delete=models.SET_NULL, null=True, blank=True, related_name='photos')
+    doggy = models.ForeignKey(HubDoggyModel, on_delete=models.CASCADE, null=True, blank=True, related_name='photos')
 
     def __str__(self):
         return f"id: {self.doggy}"

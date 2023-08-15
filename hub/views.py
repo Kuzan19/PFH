@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
 
 
@@ -17,22 +17,27 @@ class HomePageView(View):
         pass
 
 
-class SomeDoggyPage(View):
-    """Страница определенного объявления"""
-    def get(self, request, slug_doggy: str, id_doggy: int):
-        doggy = get_object_or_404(HubDoggyModel, slug=slug_doggy, id=id_doggy)
-        return render(request, "hub/doggypage.html", context={'doggy': doggy})
+    # def get(self, request, slug_doggy: str, id_doggy: int):
+    #     doggy = get_object_or_404(HubDoggyModel, slug=slug_doggy, id=id_doggy)
+    #     return render(request, "hub/doggypage.html", context={'doggy': doggy})
 
-    def post(self, request):
-        pass
+
+class SomeDoggyPage(DetailView):
+    """Страница определенного объявления"""
+
+    model = HubDoggyModel
+    context_object_name = 'doggy'
+    template_name = "hub/doggypage.html"
+    slug_url_kwarg = 'slug_doggy'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Подробная информация: {self.object.name}'
+        return context
 
 
 class HubPageView(ListView):
     """Главная страница с объявлениями"""
-
-    doggyes = HubDoggyModel.objects.all()
-    for doggy in doggyes:
-        doggy.save()
 
     model = HubDoggyModel
     template_name = 'hub/hubpage.html'

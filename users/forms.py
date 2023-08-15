@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
 from django.contrib.auth.models import User
 
 from users.models import Profile
@@ -26,9 +26,8 @@ class UserRegistrationForms(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2',)
 
     def clean_email(self):
-        """
-        Проверка email на уникальность
-        """
+        """Проверка email на уникальность"""
+
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
         if email and User.objects.filter(email=email).exclude(username=username).exists():
@@ -37,9 +36,8 @@ class UserRegistrationForms(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    """
-    Форма авторизации на сайте
-    """
+    """Форма авторизации на сайте"""
+
     username = forms.CharField(label='Login',
                                widget=forms.TextInput(attrs={'class': 'form-input',
                                                              "placeholder": 'Create your login', }))
@@ -50,14 +48,14 @@ class UserLoginForm(AuthenticationForm):
 
 class UserUpdateForm(forms.ModelForm):
     """Форма обновления данных пользователя"""
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', )
 
     def __init__(self, *args, **kwargs):
-        """
-        Обновление стилей формы под bootstrap
-        """
+        """Обновление стилей формы под bootstrap"""
+
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({
@@ -66,9 +64,8 @@ class UserUpdateForm(forms.ModelForm):
             })
 
     def clean_email(self):
-        """
-        Проверка email на уникальность
-        """
+        """Проверка email на уникальность"""
+
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')
         if email and User.objects.filter(email=email).exclude(username=username).exists():
@@ -78,14 +75,27 @@ class UserUpdateForm(forms.ModelForm):
 
 class ProfileUpdateForm(forms.ModelForm):
     """Форма обновления данных профиля"""
+
     class Meta:
         model = Profile
         fields = ('slug', 'avatar')
 
     def __init__(self, *args, **kwargs):
-        """
-        Обновление стилей формы обновления
-        """
+        """Обновление стилей формы обновления"""
+
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+                'autocomplete': 'off'
+            })
+
+
+class UserChangePasswordForm(SetPasswordForm):
+    """Форма изменения пароля"""
+
+    def __init__(self, *args, **kwargs):
+        """Обновление стилей формы"""
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs.update({

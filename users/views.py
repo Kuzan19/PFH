@@ -1,17 +1,17 @@
 from django.contrib.auth import login
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, modelformset_factory
 from django.http import HttpResponseRedirect
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, TemplateView
 
-from hub.forms import HubDoggyForm, PhotoDoggyForm
+from hub.forms import HubDoggyForm, AddDoggyFormSet
 from hub.models import HubDoggyModel, PhotoDoggyModel
-from users.forms import UserRegistrationForms, UserLoginForm, UserUpdateForm, ProfileUpdateForm
+from users.forms import UserRegistrationForms, UserLoginForm, UserUpdateForm, ProfileUpdateForm, UserChangePasswordForm
 from users.models import Profile
 
 
@@ -64,23 +64,55 @@ class UserUpdateView(UpdateView):
         return reverse_lazy('profile_page', args=[self.slug])
 
 
-class AddDoggyView(View):
-    """Представление для создания нового объявления"""
+class AddDoggyView(CreateView):
 
-    def get(self, request):
-        form_doggy = HubDoggyForm()
-        form_photo = PhotoDoggyForm()
-        return render(request, 'users/adddoggy.html', context={'form_doggy': form_doggy, 'form_photo': form_photo, })
+    template_name = 'users/add_doggy.html'
+    form_class = HubDoggyForm
 
-    def post(self, request):
-        form_doggy = HubDoggyForm(request.POST)
-        if form_doggy.is_valid():
-            form_doggy.save()
-        form_photo = PhotoDoggyForm(request.POST, request.FILES)
-        if form_photo.is_valid():
-            form_photo.save()
+    def get_context_data(self, **kwargs):
+        context = super(AddDoggyView, self).get_context_data(**kwargs)
+        context['doggy_formset'] = AddDoggyFormSet()
+        return context
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        doggy_formset = AddDoggyFormSet(self.request.POST, self.request.FILES)
+        if form.is_valid() and doggy_formset.is_valid():
+            return self.form_valid(form, doggy_formset)
+        else:
+            return self.form_invalid(form, doggy_formset)
+
+    def form_valid(self, form, doggy_formset):
+        self.object = form.save(commit=False)
+        self.object.save()
+        # saving ProductMeta Instances
+        doggys = doggy_formset.save(commit=False)
+        for meta in doggys:
+            meta.doggy = self.object
+            meta.save()
         return HttpResponseRedirect('/hub')
+
+    def form_invalid(self, form, doggy_formset):
+        return self.render_to_response(
+            self.get_context_data(form=form,
+                                  doggy_formset=doggy_formset))
+
+
+class EditPasswordUser(SuccessMessageMixin, PasswordChangeView):
+    """Представления изменения пароля"""
+    form_class = UserChangePasswordForm
+    template_name = "users/user_password_change.html"
+    success_message = "Пароль успешно изменен"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Изменение пароля на сайте'
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('edit_password_page', kwargs={'slug': self.request.user.profile.slug})
 
 
 class RegisterUser(SuccessMessageMixin, CreateView):

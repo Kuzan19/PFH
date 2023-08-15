@@ -17,6 +17,5 @@ class PhotoDoggyForm(forms.ModelForm):
         fields = "__all__"
 
 
-# AddDoggyFormSet = inlineformset_factory(HubDoggyModel, PhotoDoggyModel, form=PhotoDoggyForm,  extra=1,
-#                                         can_delete=True, can_delete_extra=True)
+AddDoggyFormSet = inlineformset_factory(HubDoggyModel, PhotoDoggyModel, form=PhotoDoggyForm, extra=1)
 
