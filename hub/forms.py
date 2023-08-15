@@ -15,7 +15,8 @@ class PhotoDoggyForm(forms.ModelForm):
     class Meta:
         model = PhotoDoggyModel
         fields = "__all__"
-
+        exclude = ('doggy', )
+    
 
 AddDoggyFormSet = inlineformset_factory(HubDoggyModel, PhotoDoggyModel, form=PhotoDoggyForm, extra=1)
 

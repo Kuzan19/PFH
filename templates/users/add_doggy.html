@@ -10,12 +10,12 @@
         {% csrf_token %}
         <div class="card">
             <div class="card-header">
-                <h4>Create Product</h4>
+                <h4>Создать объявление</h4>
             </div>
             <div class="card-body">
                 {{ form.non_form_errors }}
                 {{ form.as_p }}
-                <h5 class="text-info">Add Product Metas</h5>
+                <h5 class="text-info">Добавить фотографии</h5>
                 {{ doggy_formset.non_form_errors }}
                 {{ doggy_formset.management_form }}
                 {% for form in doggy_formset %}
