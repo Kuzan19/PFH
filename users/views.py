@@ -80,14 +80,14 @@ class AddDoggyView(CreateView):
         form = self.get_form(form_class)
         doggy_formset = AddDoggyFormSet(self.request.POST, self.request.FILES)
         if form.is_valid() and doggy_formset.is_valid():
-            return self.form_valid(form, doggy_formset)
+            return self.form_valid(request, form, doggy_formset)
         else:
-            return self.form_invalid(form, doggy_formset)
+            return self.form_invalid(request, form, doggy_formset)
 
-    def form_valid(self, form, doggy_formset):
+    def form_valid(self, request, form, doggy_formset):
         self.object = form.save(commit=False)
+        self.object.seller = request.user
         self.object.save()
-        # saving ProductMeta Instances
         doggys = doggy_formset.save(commit=False)
         for meta in doggys:
             meta.doggy = self.object

@@ -25,9 +25,20 @@
                             {% endif %}
                             <li>Заходил: {{ profile.user.last_login }}</li>
                         </ul>
+                    {% if request.user == profile.user %}
                     <a href="{% url 'edit_page' %}" class="btn btn-sm btn-primary">Редактировать профиль</a>
                     <a href="{% url 'add_doggy_page' %}" class="btn btn-sm btn-primary">Добавить объявление</a>
                     <a href="{% url 'edit_password_page' %}" class="btn btn-sm btn-primary">Изменить пароль</a>
+                    {% endif %}
+                        <h2> Объявления пользователя: </h2>
+                        <div class="card h-100">
+                            {% for doggy in profile.user.doggy.all %}
+                                {{ doggy.name }}
+                                {% for photo in doggy.photos.all %}
+                                <img class="card-img-profile" src="{{ photo.image.url }}" alt="..." width="300" height="200"/>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>

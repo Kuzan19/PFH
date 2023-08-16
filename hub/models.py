@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MaxValueValidator, FileExtensionValidator, MinValueValidator
 from django.urls import reverse
 from django.utils.text import slugify
+
+User = get_user_model()
 
 
 class HubDoggyModel(models.Model):
@@ -19,6 +22,7 @@ class HubDoggyModel(models.Model):
     place = models.CharField(max_length=255, blank=False, null=False)
     slug = models.SlugField(default='', null=False, db_index=True)
     price = models.IntegerField(blank=True, null=False, validators=[MinValueValidator(1)], default=0)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='doggy')
 
     def __str__(self):
         return f"{self.name}"

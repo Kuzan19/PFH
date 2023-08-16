@@ -9,6 +9,7 @@ class HubDoggyForm(forms.ModelForm):
         model = HubDoggyModel
         fields = "__all__"
         exclude = ('slug', )
+        widgets = {'seller': forms.HiddenInput()}
 
 
 class PhotoDoggyForm(forms.ModelForm):
