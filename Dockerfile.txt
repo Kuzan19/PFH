@@ -1,0 +1,14 @@
+FROM python:3.9
+
+
+RUN mkdir /pfh
+WORKDIR /pfh
+RUN pip install --upgrade pip
+COPY requirements.txt /pfh/
+
+RUN pip install -r requirements.txt
+COPY . /pfh/
+
+EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
