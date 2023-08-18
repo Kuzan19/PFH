@@ -22,6 +22,7 @@
 <h3> Лет: {{ doggy.age_old }} Месяцев: {{ doggy.months_old }} </h3>
 <h3> Гендер: {{ doggy.gender }} </h3>
 <h3> Место жительства: {{ doggy.place }} </h3>
+<h3> Порода: {{ doggy.species }} </h3>
 <a class="nav-link" href="/user/{{doggy.seller.profile.slug}}"> Продавец: {{doggy.seller.username}}</a>
 <br>
 {% if request.user == doggy.seller %}

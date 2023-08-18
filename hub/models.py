@@ -23,6 +23,7 @@ class HubDoggyModel(models.Model):
     slug = models.SlugField(default='', null=False, db_index=True)
     price = models.IntegerField(blank=True, null=False, validators=[MinValueValidator(1)], default=0)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='doggy')
+    species = models.CharField(max_length=255, blank=False, null=False, default='')
 
     def __str__(self):
         return f"{self.name}"

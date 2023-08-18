@@ -4277,10 +4277,6 @@ textarea.form-control-lg {
   width: 100%;
 }
 
-.card-img-profile {
-  width: 100%;
-}
-
 .card-img,
 .card-img-top {
   border-top-left-radius: var(--bs-card-inner-border-radius);

@@ -32,7 +32,8 @@
                     <div class="card-body p-4">
                         <div class="text-center">
                             <!-- Product name-->
-                            <h5 class="fw-bolder">{{ pet.name }}</h5>
+                            <h5 class="fw-bolder">Кличка: {{ pet.name }}</h5>
+                            <h6 class="fw-bolder">Порода: {{ pet.species }}</h6>
                             <!-- Product price-->
                             {{ pet.gender }} - {{ pet.age_old }} years
                         </div>
@@ -46,6 +47,21 @@
             {% endfor%}
         </div>
     </div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 </section>
 
 {% include 'footer.html' %}

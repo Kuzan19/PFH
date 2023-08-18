@@ -53,5 +53,7 @@ class HubPageView(ListView):
     model = HubDoggyModel
     template_name = 'hub/hubpage.html'
     context_object_name = 'pets'
+    paginate_by = 3
+
 
 

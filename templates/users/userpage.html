@@ -31,14 +31,15 @@
                     <a href="{% url 'edit_password_page' %}" class="btn btn-sm btn-primary">Изменить пароль</a>
                     {% endif %}
                         <h2> Объявления пользователя: </h2>
-                        <div class="card h-100">
                             {% for doggy in profile.user.doggy.all %}
-                                {{ doggy.name }}
+                            <div class="card h-100">
+                                <a href="/hub/{{doggy.slug}}" class="">{{ doggy.name }}</a>
                                 {% for photo in doggy.photos.all %}
-                                <img class="card-img-profile" src="{{ photo.image.url }}" alt="..." width="300" height="200"/>
+                                <img src="{{ photo.image.url }}" alt="..." width="300" height="200"/>
                                 {% endfor %}
+                            </div>
                             {% endfor %}
-                        </div>
+
                     </div>
                 </div>
             </div>
