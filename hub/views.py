@@ -17,11 +17,6 @@ class HomePageView(View):
         pass
 
 
-    # def get(self, request, slug_doggy: str, id_doggy: int):
-    #     doggy = get_object_or_404(HubDoggyModel, slug=slug_doggy, id=id_doggy)
-    #     return render(request, "hub/doggypage.html", context={'doggy': doggy})
-
-
 class SomeDoggyPage(UpdateView):
     """Страница определенного объявления"""
 
@@ -37,14 +32,14 @@ class SomeDoggyPage(UpdateView):
         context['form'] = PhotoDoggyForm()
         return context
 
-    # def post(self, request, slug_doggy):
-    #     form = PhotoDoggyForm(request.POST, request.FILES)
-    #     # doggy = HubDoggyModel.objects.get()
-    #     if form.is_valid():
-    #         instances = form.save(commit=False)
-    #         for instance in instances:
-    #             instance.save()
-    #     return render(request, "hub/doggypage.html", context={'form': form})
+    def post(self, request, slug_doggy):
+        form = PhotoDoggyForm(request.POST, request.FILES)
+        dog = HubDoggyModel.objects.get(slug=slug_doggy)
+        if form.is_valid():
+            instances = form.save(commit=False)
+            instances.doggy_id = dog.id
+            instances.save()
+        return render(request, "hub/doggypage.html", context={'form': form})
 
 
 class HubPageView(ListView):

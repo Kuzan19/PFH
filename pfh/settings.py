@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'users',
     'rest_framework',
     'crispy_forms',
-    ''
 
 
 ]
